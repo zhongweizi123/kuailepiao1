@@ -1,0 +1,295 @@
+/* 快乐票 —— 全局样式（深色数据风，参照《快乐票.md》3.2 视觉风格建议）
+   配色约定：降赔绿色 ↓ / 升赔红色 ↑ / 品牌主色体彩红 */
+:root {
+  --bg: #0d1220;            /* 页面底色 */
+  --card: #171e2e;          /* 卡片底色 */
+  --card-line: #242e45;     /* 卡片描边 */
+  --line: #2a3350;          /* 分隔线 */
+  --text: #e8eaf0;          /* 主文字 */
+  --text2: #8b93a7;         /* 次要文字 */
+  --red: #d92632;           /* 体彩红（品牌） */
+  --up: #ff5b5b;            /* 升赔红 */
+  --down: #00c48c;          /* 降赔绿 */
+  --blue: #4d8dff;          /* 客胜蓝 */
+  --gold: #f7b955;          /* 星级金 */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 手机优先：内容居中一列（底部留出导航栏空间） */
+.page { max-width: 640px; margin: 0 auto; padding: 0 12px 90px; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ---------- 顶栏 ---------- */
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0 10px;
+}
+.logo { font-size: 20px; font-weight: 700; color: var(--red); }
+.logo .tag {
+  font-size: 11px; font-weight: 400; color: #fff;
+  background: var(--red); border-radius: 4px; padding: 1px 6px; margin-left: 6px;
+}
+.update { font-size: 11px; color: var(--text2); }
+.back { font-size: 14px; color: var(--text2); }
+
+/* ---------- 演示数据横幅 ---------- */
+.banner {
+  background: #2a2110; border: 1px solid #4a3a15; color: #e8c47a;
+  border-radius: 8px; padding: 8px 12px; font-size: 12px; margin-bottom: 12px;
+}
+
+/* ---------- 选项卡 ---------- */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.tabs button {
+  flex: 1 1 auto; min-width: 84px; padding: 8px 0; border-radius: 8px; cursor: pointer;
+  background: var(--card); border: 1px solid var(--card-line); color: var(--text2);
+  font-size: 14px;
+}
+.tabs button.active {
+  background: var(--red); border-color: var(--red); color: #fff; font-weight: 600;
+}
+
+/* ---------- 首页比赛卡片 ---------- */
+.match-card {
+  display: block; background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;
+}
+.match-card:active { background: #1b2438; }
+.mc-top { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
+.mc-top .league { color: var(--gold); font-weight: 600; }
+.mc-top .deadline { margin-left: auto; }
+.mc-top .deadline b { color: var(--red); font-variant-numeric: tabular-nums; }
+.mc-teams { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 10px 0 4px; }
+.mc-teams .team { flex: 1; font-size: 17px; font-weight: 600; text-align: center; }
+.mc-teams .vs { font-size: 12px; color: var(--text2); }
+.mc-time { text-align: center; font-size: 12px; color: var(--text2); }
+.mc-odds { display: flex; gap: 8px; margin-top: 10px; }
+.odds-chip {
+  flex: 1; text-align: center; background: #121828; border: 1px solid var(--line);
+  border-radius: 8px; padding: 6px 2px;
+}
+.odds-chip .opt { font-size: 12px; color: var(--text2); }
+.odds-chip .val { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* 涨跌标记：降赔绿 ↓ / 升赔红 ↑ / 持平灰 */
+.change { font-size: 11px; margin-left: 3px; font-weight: 600; }
+.change.down { color: var(--down); }
+.change.up { color: var(--up); }
+.change.flat { color: var(--text2); }
+
+.mc-signal {
+  margin-top: 8px; font-size: 12px; color: var(--gold);
+  background: rgba(247, 185, 85, 0.08); border-radius: 6px; padding: 4px 8px;
+}
+.mc-signal.risk { color: var(--up); background: rgba(255, 91, 91, 0.08); }
+.mc-plays { margin-top: 6px; font-size: 11px; color: var(--text2); }
+
+/* ---------- 详情页头部 ---------- */
+.mhead {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 12px; padding: 14px; margin-bottom: 12px;
+}
+.mhead .mh-line1 { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
+.mhead .mh-line1 .league { color: var(--gold); font-weight: 600; }
+.mhead .status {
+  margin-left: auto; color: var(--down); border: 1px solid var(--down);
+  border-radius: 4px; padding: 0 6px; font-size: 11px;
+}
+.mhead .mh-teams { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 10px 0 6px; }
+.mhead .mh-teams .team { flex: 1; font-size: 19px; font-weight: 700; text-align: center; }
+.mhead .mh-teams .vs { font-size: 13px; color: var(--text2); }
+.mhead .mh-line3 { text-align: center; font-size: 12px; color: var(--text2); }
+.mhead .mh-deadline {
+  text-align: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line);
+  font-size: 13px; color: var(--text2);
+}
+.mhead .mh-deadline b { color: var(--red); font-size: 18px; font-variant-numeric: tabular-nums; margin-left: 6px; }
+
+/* ---------- 通用卡片 ---------- */
+.card {
+  background: var(--card); border: 1px solid var(--card-line);
+  border-radius: 12px; padding: 14px; margin-bottom: 12px;
+}
+.card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+.card-title .sub { font-size: 12px; font-weight: 400; color: var(--text2); margin-left: 6px; }
+.card-note { font-size: 11px; color: var(--text2); margin-top: 8px; }
+
+#chart { width: 100%; height: 340px; }
+.chart-note { font-size: 11px; color: var(--text2); margin-top: 8px; }
+
+/* ---------- 表格 ---------- */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+  text-align: left; color: var(--text2); font-weight: 400; font-size: 12px;
+  padding: 6px 4px; border-bottom: 1px solid var(--line);
+}
+.tbl td { padding: 7px 4px; border-bottom: 1px solid #1c2440; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl .num { font-variant-numeric: tabular-nums; font-weight: 600; }
+.tbl .right { text-align: right; }
+.tbl .center { text-align: center; }
+.tbl .grp td { background: #1a2338; color: var(--gold); font-weight: 600; font-size: 12px; padding: 6px 4px; }
+
+/* ---------- 购彩建议卡片 ---------- */
+.sug-card {
+  border: 1px solid var(--card-line); border-radius: 10px; padding: 12px;
+  margin-bottom: 10px; background: #121828;
+}
+.sug-card.recommend { border-left: 3px solid var(--down); }
+.sug-card.risk { border-left: 3px solid var(--up); }
+.sug-card.near { border-left: 3px solid var(--gold); }
+.sug-head { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; }
+.sug-head .odds {
+  margin-left: auto; font-size: 18px; color: var(--text); font-variant-numeric: tabular-nums;
+}
+.sug-line { font-size: 13px; margin-top: 6px; color: #c6cddb; }
+.sug-line.hist { color: var(--text2); font-size: 12px; }
+.sug-stars { margin-top: 8px; font-size: 13px; color: var(--gold); }
+.sug-stars .lv { color: var(--text2); font-size: 12px; margin-left: 6px; }
+
+/* ---------- 页脚 ---------- */
+.footer {
+  margin-top: 16px; text-align: center; font-size: 11px; color: var(--text2);
+  border-top: 1px solid var(--line); padding-top: 12px;
+}
+.footer .warn { color: #c9a24b; }
+
+/* 表格内涨跌 */
+.td-change.down { color: var(--down); }
+.td-change.up { color: var(--up); }
+.td-change.flat { color: var(--text2); }
+
+/* ---------- 响应式：电脑宽屏布局（避免网页在大屏上显得过窄） ---------- */
+
+/* 详情页两栏：左侧走势图+变动明细，右侧建议+对照表 */
+.detail-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.col-main, .col-side { display: flex; flex-direction: column; gap: 12px; }
+.col-main > .card, .col-side > .card { margin-bottom: 0; }
+
+/* 中等屏（平板） */
+@media (min-width: 720px) and (max-width: 959px) {
+  .page { max-width: 760px; }
+  .match-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .match-card { margin-bottom: 0; }
+}
+
+/* 电脑大屏 */
+@media (min-width: 960px) {
+  .page { max-width: 1200px; padding: 0 20px 90px; }
+
+  /* 首页：比赛卡片三列排列 */
+  .match-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .match-card { margin-bottom: 0; }
+
+  /* 详情页：左侧主区 + 右侧侧栏 */
+  .detail-grid { grid-template-columns: 3fr 2fr; align-items: start; }
+
+  /* 折线图放大，占宽更饱满、长宽比更协调 */
+  #chart { height: 440px; }
+}
+
+/* ============ 底部导航栏 ============ */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+  display: flex; justify-content: space-around; align-items: stretch;
+  max-width: 640px; margin: 0 auto;
+  background: rgba(18, 24, 40, 0.96);
+  border-top: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+}
+.tb-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: 8px 0 7px; font-size: 11px; color: var(--text2); gap: 2px;
+}
+.tb-item .tb-ico { font-size: 19px; line-height: 1; }
+.tb-item.active { color: var(--red); font-weight: 600; }
+.tb-item:active { color: var(--text); }
+
+/* ============ 收藏按钮 ============ */
+.fav-btn {
+  font-size: 13px; color: var(--text2); cursor: pointer;
+  padding: 2px 6px; margin-left: 6px; white-space: nowrap;
+}
+.fav-btn.on { color: var(--red); }
+
+/* ============ 搜索框 ============ */
+.search {
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  background: #121828; border: 1px solid var(--line); color: var(--text);
+  font-size: 14px; outline: none;
+}
+.search:focus { border-color: var(--red); }
+
+/* ============ 历史场次 ============ */
+.his-card .score { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.result-badge {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  border-radius: 4px; padding: 1px 8px;
+}
+.result-badge.home { color: #fff; background: var(--up); }
+.result-badge.away { color: #fff; background: var(--blue); }
+.result-badge.draw { color: #e8eaf0; background: #5a6380; }
+.tbl tr.hit td { background: rgba(0, 196, 140, 0.08); }
+.tbl tr.hit td:first-child { font-weight: 700; color: var(--down); }
+
+/* ============ 推荐页 ============ */
+.sug-card .sigs { display: flex; flex-wrap: wrap; gap: 6px; }
+.sig-chip {
+  font-size: 11px; color: var(--down); background: rgba(0,196,140,0.10);
+  border: 1px solid rgba(0,196,140,0.25); border-radius: 4px; padding: 2px 6px;
+}
+.sig-chip.risk { color: var(--up); background: rgba(255,91,91,0.10); border-color: rgba(255,91,91,0.25); }
+.sug-link {
+  display: inline-block; margin-top: 8px; font-size: 12px; color: var(--blue);
+}
+.empty { text-align: center; color: var(--text2); padding: 40px 0; }
+
+/* ============ 我的页 ============ */
+.form-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+.form-row input[type="number"] {
+  width: 120px; padding: 8px 10px; border-radius: 8px;
+  background: #121828; border: 1px solid var(--line); color: var(--text); font-size: 15px;
+}
+.btn {
+  background: var(--red); color: #fff; border: none; border-radius: 8px;
+  padding: 8px 16px; font-size: 14px; cursor: pointer;
+}
+.setting-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid #1c2440; }
+.setting-row:last-child { border-bottom: none; }
+.setting-row .lbl { flex: 1; }
+.fm-teams { font-size: 15px; font-weight: 600; }
+.fm-meta { font-size: 12px; color: var(--text2); }
+.fav-match { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #1c2440; }
+.fav-match:last-child { border-bottom: none; }
+.fav-match .fm-info { flex: 1; }
+
+/* 开关（提醒开关） */
+.switch { position: relative; width: 44px; height: 24px; flex: none; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch .slider {
+  position: absolute; inset: 0; border-radius: 24px; background: #39415a; cursor: pointer; transition: .2s;
+}
+.switch .slider::before {
+  content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+  border-radius: 50%; background: #fff; transition: .2s;
+}
+.switch input:checked + .slider { background: var(--down); }
+.switch input:checked + .slider::before { transform: translateX(20px); }
+
+/* ============ 底部导航栏响应式宽度 ============ */
+@media (min-width: 720px) and (max-width: 959px) {
+  .tabbar { max-width: 760px; }
+}
+@media (min-width: 960px) {
+  .tabbar { max-width: 1200px; }
+}

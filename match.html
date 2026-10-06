@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d1220">
+  <title>快乐票1 - 场次详情</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Vue 3 与 ECharts（国内 CDN） -->
+  <script src="https://cdn.staticfile.net/vue/3.4.21/vue.global.prod.js"></script>
+  <script src="https://cdn.staticfile.net/echarts/5.4.3/echarts.min.js"></script>
+</head>
+<body>
+<div class="page" id="app">
+  <header class="topbar">
+    <a class="back" href="index.html">← 返回首页</a>
+    <div class="logo">🎫 快乐票1<span class="tag">真实数据</span></div>
+  </header>
+
+  <!-- 比赛信息头 -->
+  <div class="mhead">
+    <div class="mh-line1">
+      <span class="league">{{ match.league }}</span>
+      <span>{{ match.no }}</span>
+      <span class="status">在售</span>
+    </div>
+    <div class="mh-teams">
+      <span class="team">{{ match.home }}<small style="display:block;font-size:11px;color:var(--text2);font-weight:400;">{{ match.homeRank }}</small></span>
+      <span class="vs">VS</span>
+      <span class="team">{{ match.away }}<small style="display:block;font-size:11px;color:var(--text2);font-weight:400;">{{ match.awayRank }}</small></span>
+    </div>
+    <div class="mh-line3">开赛时间：{{ match.matchTime }}</div>
+    <div class="mh-deadline">距开赛 <b>{{ countdown }}</b></div>
+  </div>
+
+  <!-- 玩法切换 -->
+  <div class="tabs">
+    <button v-for="k in playOrder" :key="k" :class="{ active: playKey === k }" @click="switchPlay(k)">
+      {{ match.plays[k].label }}
+    </button>
+  </div>
+
+  <!-- 走势图（有 ≥2 个历史快照时显示） -->
+  <div class="card" v-if="showChart">
+    <div class="card-title">
+      {{ play.label }}赔率走势<span class="sub">初盘 → 当前（虚线为初盘参考线）{{ play.handicap ? '· ' + play.handicap : '' }}</span>
+    </div>
+    <div id="chart"></div>
+    <div class="chart-note">
+      绿色点 = 赔率下降、红色点 = 赔率上升（单次变动 ≥0.10）。拖动下方滑块可查看任意时间点。
+      数据为官方竞彩网实时抓取，同一时点可能只有一次记录，走势随持续抓取逐渐变密。
+    </div>
+  </div>
+
+  <!-- 无足够历史快照时显示赔率表 -->
+  <div class="card" v-else>
+    <div class="card-title">{{ play.label }}<span class="sub">{{ play.handicap ? '（' + play.handicap + '）' : '' }}</span></div>
+    <table class="tbl">
+      <thead><tr><th>赛果选项</th><th class="right">初盘</th><th class="right">当前</th><th class="center">变化</th></tr></thead>
+      <tbody>
+        <template v-for="(r, i) in tableRows" :key="i">
+          <tr v-if="r.type === 'group'" class="grp"><td colspan="4">{{ r.name }}</td></tr>
+          <tr v-else>
+            <td>{{ r.opt.name }}</td>
+            <td class="right num">{{ r.opt.initial.toFixed(2) }}</td>
+            <td class="right num">{{ r.opt.current.toFixed(2) }}</td>
+            <td class="center td-change" :class="changeCls(r.opt)">{{ changeText(r.opt) }}</td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    <div class="card-note">{{ canChart ? '该场次刚开售，历史走势快照不足 2 个，暂无法画图；持续抓取后会逐渐累积。' : '该玩法选项较多，采用表格展示；涨跌为初盘→当前的变化。' }}</div>
+  </div>
+
+  <!-- 赔率变动明细 -->
+  <div class="card" v-if="canChart && changes.length">
+    <div class="card-title">赔率变动明细<span class="sub">单次变动 ≥0.05 的记录</span></div>
+    <table class="tbl">
+      <thead><tr><th>时间</th><th>选项</th><th class="right">变动前</th><th class="right">变动后</th><th class="center">幅度</th></tr></thead>
+      <tbody>
+        <tr v-for="(c, i) in changes" :key="i">
+          <td>{{ c.time }}</td>
+          <td>{{ c.name }}</td>
+          <td class="right num">{{ c.from.toFixed(2) }}</td>
+          <td class="right num">{{ c.to.toFixed(2) }}</td>
+          <td class="center td-change" :class="c.d < 0 ? 'down' : 'up'">{{ c.d < 0 ? '↓' : '↑' }}{{ Math.abs(c.d).toFixed(2) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 数据分析提示 -->
+  <div class="card">
+    <div class="card-title">💡 数据分析提示<span class="sub">统计参考，不构成中奖承诺</span></div>
+    <template v-if="cards.length">
+      <div v-for="(c, i) in cards" :key="i" class="sug-card" :class="c.kind">
+        <div class="sug-head">
+          <span>{{ c.kind === 'risk' ? '⚠️' : '✅' }}</span>
+          <span>{{ c.title }}</span>
+          <span class="odds">{{ c.current.toFixed(2) }}</span>
+        </div>
+        <div class="sug-line">触发信号：{{ c.sigTexts.join('；') }}</div>
+        <div class="sug-line hist">{{ c.note }}</div>
+      </div>
+    </template>
+    <div class="sug-line" v-else>本场暂无触发信号。赔率仅为市场资金与机构定价的产物，不代表真实赛果概率，请结合自身判断理性参考。</div>
+  </div>
+
+  <footer class="footer">
+    <div class="warn">购彩有风险，投注需谨慎。本页面赔率为官方竞彩网真实抓取数据，仅供统计参考，不构成中奖承诺。未满18周岁禁止购彩。</div>
+  </footer>
+</div>
+
+<script src="js/live-data.js"></script>
+<script src="js/signals.js"></script>
+<script src="js/match.js"></script>
+</body>
+</html>

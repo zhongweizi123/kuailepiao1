@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d1220">
+  <title>快乐票1 - 竞彩足球真实赔率</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Vue 3（国内 CDN） -->
+  <script src="https://cdn.staticfile.net/vue/3.4.21/vue.global.prod.js"></script>
+  <style>
+    .rank { display: block; font-size: 11px; color: var(--text2); font-weight: 400; margin-top: 2px; }
+    .date-group-title { font-size: 13px; color: var(--text2); font-weight: 600; margin: 14px 0 8px; }
+  </style>
+</head>
+<body>
+<div class="page" id="app">
+  <header class="topbar">
+    <div class="logo">🎫 快乐票1<span class="tag">真实数据</span></div>
+    <div class="update">更新于 {{ data.generatedAt }}</div>
+  </header>
+
+  <div class="banner">数据来源：中国竞彩网（官方）· 竞彩足球在售场次真实赔率。购彩有风险，投注需谨慎，未满18周岁禁止购彩。本页面仅做数据展示与统计参考，不构成中奖承诺。</div>
+
+  <template v-for="g in groups" :key="g.date">
+    <div class="date-group-title">{{ dateLabel(g.date) }} · {{ g.matches.length }} 场</div>
+    <div class="match-list">
+      <a v-for="m in g.matches" :key="m.id" class="match-card" :href="'match.html?id=' + m.id">
+        <div class="mc-top">
+          <span class="league">{{ m.league }}</span>
+          <span>{{ m.no }}</span>
+          <span class="deadline">距开赛 <b>{{ countdown(m) }}</b></span>
+        </div>
+        <div class="mc-teams">
+          <span class="team">{{ m.home }}<small class="rank">{{ m.homeRank }}</small></span>
+          <span class="vs">VS</span>
+          <span class="team">{{ m.away }}<small class="rank">{{ m.awayRank }}</small></span>
+        </div>
+        <div class="mc-time">开赛时间：{{ m.matchTime }}</div>
+        <div class="mc-odds">
+          <div v-for="o in m.plays.spf.options" :key="o.name" class="odds-chip">
+            <div class="opt">{{ o.name }}</div>
+            <div class="val">
+              {{ o.current.toFixed(2) }}
+              <span class="change" :class="change(o).dir">
+                {{ change(o).dir === 'flat' ? '—' : (change(o).dir === 'down' ? '↓' : '↑') + Math.abs(change(o).p).toFixed(0) + '%' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div v-if="badge(m)" class="mc-signal" :class="{ risk: badge(m).risk }">{{ badge(m).text }}</div>
+        <div v-if="playSummary(m)" class="mc-plays">{{ playSummary(m) }}</div>
+      </a>
+    </div>
+  </template>
+
+  <footer class="footer">
+    <div class="warn">购彩有风险，投注需谨慎。本工具仅做数据展示与统计参考，不提供销售/代购服务，不构成中奖承诺。未满18周岁禁止购彩。</div>
+    <div style="margin-top:4px;">快乐票1 · 数据来源：中国竞彩网（官方） · 运行 crawler.py 可更新数据</div>
+  </footer>
+</div>
+
+<script src="js/live-data.js"></script>
+<script src="js/signals.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
